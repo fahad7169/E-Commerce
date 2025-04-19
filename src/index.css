@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+@theme {
+    --font-sans: "Mona Sans", sans-serif;
+    --color-white-50: #FAFAFA;
+    --color-orange-50: #DB4444;
+}
+
+:root {
+  --background-color: var(--color-white-50);
+  --text-color: #333;
+  --link-color: var(--color-orange-50);
+}
+
+[data-theme="dark"] {
+  --background-color: #333;
+  --text-color: #FAFAFA;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+
+
+.navbar.scrolled {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.navbar.not-scrolled {
+  background-color: transparent;
+}
