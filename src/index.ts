@@ -19,10 +19,11 @@ const limiter = rateLimit({
   max: 100, // max requests per IP
   message: 'Too many requests, please try again later.',
 })
-
 app.use(cors({
-  origin: "http://localhost:5173", // your frontend origin
-  credentials: true // 👈 important for allowing cookies
+  origin: 'http://localhost:5173', // Frontend origin
+  credentials: true, // Allow credentials
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(cookieParser());
