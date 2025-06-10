@@ -2,19 +2,11 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { navLinks } from '@/constants';
+import AccountDropdown from './AccountDropdown';
 
 const NavBar = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [theme, setTheme] = useState('light');
   const { isAuth, authUser, logout } = useAuthStore();
 
   useEffect(() => {
@@ -23,21 +15,45 @@ const NavBar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
-  };
 
   return (
     <header className={`relative -mt-10 w-full left-1/2 py-4 px-5 md:px-20 -translate-x-1/2 z-[100] transition-all duration-300 ease-in-out ${
       scrolled ? 'top-0 shadow-md' : 'md:top-10 top-0'
-    } ${theme === 'dark' ? 'bg-[#181818]' : 'bg-white'}`}>
+    } bg-white`}>
 
       <div className='mx-auto flex items-center justify-between'>
         {/* Left Section - Always visible */}
-        <div className='text-xl md:text-2xl font-semibold transition-transform duration-300 hover:scale-105'>
-          Exclusive
+        <div className='flex items-center'>
+          <div className="relative group">
+            <svg
+              className="w-10 h-10 md:w-12 md:h-12 transition-transform duration-300 group-hover:scale-110"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: '#EF4444' }} />
+                  <stop offset="100%" style={{ stopColor: '#F87171' }} />
+                </linearGradient>
+              </defs>
+              <path
+                d="M21 7L19.5 3H4.5L3 7M21 7H3M21 7L19 15H5L3 7M8 19C8 19.5523 7.55228 20 7 20C6.44772 20 6 19.5523 6 19C6 18.4477 6.44772 18 7 18C7.55228 18 8 18.4477 8 19ZM18 19C18 19.5523 17.5523 20 17 20C16.4477 20 16 19.5523 16 19C16 18.4477 16.4477 18 17 18C17.5523 18 18 18.4477 18 19Z"
+                stroke="url(#logoGradient)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <circle
+                cx="12"
+                cy="11"
+                r="2"
+                fill="url(#logoGradient)"
+                className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              />
+            </svg>
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+          </div>
         </div>
 
         <nav className='lg:flex items-center hidden'>
@@ -46,33 +62,39 @@ const NavBar = () => {
         {navLinks.map(({link,name})=>(
             <li key={name} className='group relative'>
                  <Link to={link}>
-                    <span className={`transition-colors duration-300 ${theme === 'light' ? 'hover:text-black' : 'hover:text-white'}`}>{name}</span>
-                    <span className={`absolute -bottom-1 left-0 w-0 h-0.5  ${theme === 'light' ? 'bg-black' : 'bg-white'} transition-all duration-300 group-hover:w-full`}/>
+                    <span className="transition-colors duration-300 hover:text-black">{name}</span>
+                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full"/>
                  </Link>
             </li>
         ))}
        </ul>
       </nav>
 
-
         {/* Right Section - Authentication dependent */}
-
-
         <div className='flex items-center space-x-4'>
 
         <div className='items-center space-x-1 border rounded-md focus-within:ring-2 focus-within:ring-blue-500 xs:flex hidden'>
                         <input 
                             type='text' 
                             placeholder='What are you looking for?' 
-                            className={`p-3 rounded-md focus:outline-none placeholder:text-sm hidden sm:block ${theme === 'dark' ? 'bg-[#181818] text-white' : 'bg-white'}`}
+                            className="p-3 rounded-md focus:outline-none placeholder:text-sm hidden sm:block bg-white"
                         />
-                        <span className={`material-icons cursor-pointer hidden ${theme === 'dark' ? 'text-white' : 'text-black'}`}>search</span>
+                        <span className="material-symbols-outlined cursor-pointer text-black">search</span>
                     </div>
-          {isAuth ? (
+          {!isAuth ? (
             <>
+              <Link to="/wishlist" className="relative hover:opacity-80 transition-opacity hidden xs:block">
+                <span className="material-symbols-outlined text-black">
+                favorite_border
+                </span>
+                <span className="absolute -top-1 -right-1 text-xs w-4 h-4 flex items-center justify-center bg-red-600 text-white rounded-full">
+                  2
+                </span>
+              </Link>
               {/* Logged In State */}
-              <Link to="/cart" className="relative hover:opacity-80 transition-opacity">
-                <span className={`material-icons ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+              
+              <Link to="/cart" className="relative hover:opacity-80 transition-opacity hidden xs:block">
+                <span className="material-symbols-outlined text-black">
                   shopping_cart
                 </span>
                 <span className="absolute -top-1 -right-1 text-xs w-4 h-4 flex items-center justify-center bg-red-600 text-white rounded-full">
@@ -80,39 +102,7 @@ const NavBar = () => {
                 </span>
               </Link>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger className="focus:outline-none">
-                  <span className={`material-icons ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-                    account_circle
-                  </span>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className={`z-[1000] ${theme === 'dark' ? 'bg-[#181818] border-gray-700' : 'bg-white'}`}>
-                  <DropdownMenuLabel className={theme === 'dark' ? 'text-white' : ''}>
-                    {authUser?.name || 'My Account'}
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator className={theme === 'dark' ? 'bg-gray-700' : ''} />
-                  <DropdownMenuItem asChild className={theme === 'dark' ? 'hover:bg-gray-800' : ''}>
-                    <Link to="/profile">Profile</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className={theme === 'dark' ? 'hover:bg-gray-800' : ''}>
-                    <Link to="/orders">Orders</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    onClick={logout}
-                    className={theme === 'dark' ? 'hover:bg-gray-800' : ''}
-                  >
-                    Logout
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator className={theme === 'dark' ? 'bg-gray-700' : ''} />
-                  <DropdownMenuItem onClick={toggleTheme}>
-                    {theme === 'light' ? (
-                      <><span className='material-icons mr-2'>dark_mode</span> Dark Theme</>
-                    ) : (
-                      <><span className='material-icons mr-2'>light_mode</span> Light Theme</>
-                    )}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <AccountDropdown authUser={authUser} logout={logout}/>
             </>
           ) : (
             <>
@@ -120,13 +110,13 @@ const NavBar = () => {
               <Button 
                 asChild 
                 variant="ghost" 
-                className={theme === 'dark' ? 'text-white hover:bg-gray-800' : 'text-black'}
+                className="text-black hidden xs:block"
               >
                 <Link to="/login">Login</Link>
               </Button>
               <Button 
                 asChild 
-                className={theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600' : 'bg-blue-600 hover:bg-blue-700'}
+                className="bg-blue-600 hover:bg-blue-700"
               >
                 <Link to="/register">Sign Up</Link>
               </Button>
@@ -134,8 +124,6 @@ const NavBar = () => {
           )}
         </div>
       </div>
-
-   
     </header>
   );
 };

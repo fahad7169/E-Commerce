@@ -6,8 +6,12 @@ import NavBar from './components/NavBar';
 import Sale from './components/Sale';
 import Auth from './pages/Auth';
 import GuestRoute from './components/GuestRoute';
+import Footer from './components/Footer';
 import axios from 'axios';
 import { useAuthInit } from './stores/useAuthStore';
+import Wishlist from './pages/Wishlist';
+import Cart from './pages/Cart';
+import ProductDetails from './pages/ProductDetails';
 
 // Set the base URL for Axios
 axios.defaults.baseURL = 'http://localhost:5000';
@@ -17,39 +21,42 @@ function App() {
   useAuthInit()
     return (
         <Router>
-          <>
-           <header>
-            <Sale/>
-            <NavBar/>
-           </header>
+          <div className="min-h-screen flex flex-col">
+            <header>
+              <Sale/>
+              <NavBar/>
+            </header>
 
-           <main>
-            <div className='h-[0.5px] bg-black opacity-50 md:mt-10 md:mb-2'/>
-            <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path='/contact' element={<Contact />} />
-            <Route path='/about' element={<About />} />
-            <Route
-    path="/login"
-    element={
-      <GuestRoute>
-        <Auth key="login" />
-      </GuestRoute>
-    }
-  />
-  <Route
-    path="/register"
-    element={
-      <GuestRoute>
-        <Auth key="register" />
-      </GuestRoute>
-    }
-  />
-            </Routes>
-
-           </main>
-          </>
-      </Router>
+            <main className="flex-grow">
+              <div className='h-[0.5px] bg-black opacity-50 md:mt-10 md:mb-2'/>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path='/contact' element={<Contact />} />
+                <Route path='/about' element={<About />} />
+                <Route path='/wishlist' element={<Wishlist />} />
+                <Route path='/cart' element={<Cart />} />
+                <Route path="/product/:id" element={<ProductDetails />} />
+                <Route
+                  path="/login"
+                  element={
+                    <GuestRoute>
+                      <Auth key="login" />
+                    </GuestRoute>
+                  }
+                />
+                <Route
+                  path="/register"
+                  element={
+                    <GuestRoute>
+                      <Auth key="register" />
+                    </GuestRoute>
+                  }
+                />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+        </Router>
     );
   }
   

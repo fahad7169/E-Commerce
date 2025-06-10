@@ -11,10 +11,6 @@ const navLinks = [
       name: "About",
       link: "/about",
     },
-    {
-      name: "Sign Up",
-      link: "/auth",
-    },
   ];
 
 
